@@ -100,7 +100,7 @@ public class TravelListAdapter extends RecyclerView.Adapter<TravelListAdapter.Vi
             @Override
             public void onGenerated(Palette palette) {
                 int bgColor =
-                        palette.getMutedColor(mContext.getResources()
+                        palette.getLightVibrantColor(mContext.getResources()
                                 .getColor(android.R.color.black));
                 holder.placeNameHolder.setBackgroundColor(bgColor);
             }

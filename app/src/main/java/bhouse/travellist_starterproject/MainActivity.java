@@ -1,6 +1,7 @@
 package bhouse.travellist_starterproject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -43,7 +44,13 @@ public class MainActivity extends Activity {
             public void onItemClick(View view, int position) {
                 Toast.makeText(MainActivity.this, "Clicked " + position,
                         Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putExtra(DetailActivity.EXTRA_PARAM_ID, position);
+                startActivity(intent);
             }
+
+
         };
 
         mAdapter.setOnItemClickListener(listener);

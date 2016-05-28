@@ -1,11 +1,14 @@
 package bhouse.travellist_starterproject;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
@@ -115,9 +118,43 @@ public class DetailActivity extends Activity implements View.OnClickListener {
 
   private void revealEditText(LinearLayout view) {
 
+    // start animation from bottom right of view. the offsets are so that the
+    // animation appears to start at the fab instead of inside the view itself
+    int cx = view.getRight() - 30;
+    int cy = view.getBottom() - 60;
+
+    // circle will expand to a radius of the larger of the height or the width of the view
+    int finalRadius = Math.max(view.getWidth(), view.getHeight());
+
+    Animator anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, finalRadius);
+
+    // EditText is initially hidden. set it to be visible
+    view.setVisibility(View.VISIBLE);
+    isEditTextVisible = true;
+    anim.start();
   }
 
   private void hideEditText(final LinearLayout view) {
+
+    int cx = view.getRight() - 30;
+    int cy = view.getBottom() - 60;
+    int initialRadius = view.getWidth();
+
+    // switch the start and end radii compared to before to reverse the animation
+    Animator anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, initialRadius, 0);
+
+    // callback for when the animation finishes.
+    // we don't want to hide the EditText until it finishes
+    anim.addListener(new AnimatorListenerAdapter() {
+      @Override
+      public void onAnimationEnd(Animator animation) {
+        super.onAnimationEnd(animation);
+        view.setVisibility(View.INVISIBLE);
+      }
+    });
+
+    isEditTextVisible = false;
+    anim.start();
 
   }
 

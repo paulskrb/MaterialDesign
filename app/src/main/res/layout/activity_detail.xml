@@ -58,6 +58,7 @@
 
     <ImageButton
       android:id="@+id/btn_add"
+      android:background="@drawable/btn_background"
       android:layout_width="@dimen/floating_button_size"
       android:layout_height="@dimen/floating_button_size"
       android:layout_gravity="end"
