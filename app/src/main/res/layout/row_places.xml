@@ -28,6 +28,7 @@
     <!-- This will be 45dp tall, starting from the bottom of the CardView and going up,
     meaning it will overlap the CardView -->
     <LinearLayout
+        android:id="@+id/placeNameHolder"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_gravity="bottom"

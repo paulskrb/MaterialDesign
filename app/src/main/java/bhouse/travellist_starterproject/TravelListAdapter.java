@@ -1,6 +1,9 @@
 package bhouse.travellist_starterproject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +25,8 @@ public class TravelListAdapter extends RecyclerView.Adapter<TravelListAdapter.Vi
     // mItemClickListener.onItemClick(View, int) method defined
     // in onCreate of MainActivity. The MainActivity class sets
     // the value of mItemClickListener to be its listener instance
-    // using the setter method we provide. 
-
-    protected static OnItemClickListener mItemClickListener;
+    // using the setter method we provide.
+    private OnItemClickListener mItemClickListener;
 
     // MainActivity uses this interface and defines an onItemClick method
     // and sets its TravelListAdapter to use this listener
@@ -33,7 +35,6 @@ public class TravelListAdapter extends RecyclerView.Adapter<TravelListAdapter.Vi
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
-
         mItemClickListener = listener;
     }
 
@@ -41,7 +42,10 @@ public class TravelListAdapter extends RecyclerView.Adapter<TravelListAdapter.Vi
         mContext = context;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder
+    // not going to use this ViewHolder outside this class, so we can
+    // make it non-static instead of static. also allows us to make the
+    // adapter's onItemClickListener non-static
+    protected class ViewHolder extends RecyclerView.ViewHolder
     implements View.OnClickListener {
 
         private LinearLayout placeHolder;
@@ -79,13 +83,28 @@ public class TravelListAdapter extends RecyclerView.Adapter<TravelListAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final Place place = PlaceData.placeList().get(position);
         holder.placeName.setText(place.name);
 
         Picasso.with(mContext).load(place.getImageResourceId(mContext))
                 .into(holder.placeImage);
+
+        Bitmap photo = BitmapFactory.decodeResource(mContext.getResources(),
+                place.getImageResourceId(mContext));
+
+        // generates a color for the background of our LinearLayout that
+        // holds to text view, or black if the color doesn't exist
+        Palette.generateAsync(photo, new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                int bgColor =
+                        palette.getMutedColor(mContext.getResources()
+                                .getColor(android.R.color.black));
+                holder.placeNameHolder.setBackgroundColor(bgColor);
+            }
+        });
     }
 
     @Override
