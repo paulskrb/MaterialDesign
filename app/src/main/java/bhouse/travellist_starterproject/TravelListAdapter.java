@@ -16,13 +16,33 @@ import com.squareup.picasso.Picasso;
  */
 public class TravelListAdapter extends RecyclerView.Adapter<TravelListAdapter.ViewHolder> {
 
-    Context mContext;
+    private Context mContext;
+
+    // ViewHolder class has an OnClick method that will call
+    // mItemClickListener.onItemClick(View, int) method defined
+    // in onCreate of MainActivity. The MainActivity class sets
+    // the value of mItemClickListener to be its listener instance
+    // using the setter method we provide. 
+
+    protected static OnItemClickListener mItemClickListener;
+
+    // MainActivity uses this interface and defines an onItemClick method
+    // and sets its TravelListAdapter to use this listener
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+
+        mItemClickListener = listener;
+    }
 
     public TravelListAdapter(Context context) {
         mContext = context;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder
+    implements View.OnClickListener {
 
         private LinearLayout placeHolder;
         private LinearLayout placeNameHolder;
@@ -33,11 +53,20 @@ public class TravelListAdapter extends RecyclerView.Adapter<TravelListAdapter.Vi
             super(itemView);
 
             placeHolder = (LinearLayout) itemView.findViewById(R.id.mainHolder);
+            placeHolder.setOnClickListener(this);
+
             placeNameHolder = (LinearLayout) itemView.findViewById(R.id.placeNameHolder);
             placeName = (TextView) itemView.findViewById(R.id.placeName);
             placeImage = (ImageView) itemView.findViewById(R.id.placeImage);
         }
 
+        @Override
+        public void onClick(View v) {
+            if (mItemClickListener != null) {
+
+                mItemClickListener.onItemClick(v, getLayoutPosition());
+            }
+        }
     }
 
     @Override
