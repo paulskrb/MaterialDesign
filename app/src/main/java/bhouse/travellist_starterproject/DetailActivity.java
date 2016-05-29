@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Animatable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -101,16 +102,30 @@ public class DetailActivity extends Activity implements View.OnClickListener {
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.btn_add:
+        Animatable animatable;
         if (!isEditTextVisible) {
           revealEditText(mRevealView);
+
+          // causes input cursor to be in EditText (it will have focus)
           mEditTextTodo.requestFocus();
+
+          // show soft keyboard
           mInputManager.showSoftInput(mEditTextTodo, InputMethodManager.SHOW_IMPLICIT);
+
+          // starts with + and morphs into check mark
+          mAddButton.setImageResource(R.drawable.icn_morph);
+          animatable = (Animatable) mAddButton.getDrawable();
+          animatable.start();
 
         } else {
           addToDo(mEditTextTodo.getText().toString());
           mToDoAdapter.notifyDataSetChanged();
           mInputManager.hideSoftInputFromWindow(mEditTextTodo.getWindowToken(), 0);
           hideEditText(mRevealView);
+
+          mAddButton.setImageResource(R.drawable.icn_morph_reverse);
+          animatable = (Animatable) mAddButton.getDrawable();
+          animatable.start();
 
         }
     }
