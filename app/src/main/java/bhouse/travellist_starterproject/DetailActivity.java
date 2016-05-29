@@ -7,7 +7,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Animatable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.graphics.Palette;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AlphaAnimation;
@@ -89,12 +91,28 @@ public class DetailActivity extends Activity implements View.OnClickListener {
 
   private void getPhoto() {
     Bitmap photo = BitmapFactory.decodeResource(getResources(), mPlace.getImageResourceId(this));
+    colorize(photo);
   }
 
   private void colorize(Bitmap photo) {
+    Palette palette = Palette.generate(photo);
+    applyPalette(palette);
   }
 
-  private void applyPalette() {
+
+  private void applyPalette(Palette palette) {
+
+    // sets color for the window background. in this case, that's the rest
+    // of the view, apart from the area where text is entered and the title
+    // of the place
+    getWindow().setBackgroundDrawable(
+            new ColorDrawable(palette.getDarkMutedColor(defaultColor)));
+
+    // for the LinearLayout holding the title of the place
+    mTitleHolder.setBackgroundColor(palette.getLightVibrantColor(defaultColor));
+    // for the LinearLayout containing the EditText
+    mRevealView.setBackgroundColor(palette.getMutedColor(defaultColor));
+
 
   }
 
